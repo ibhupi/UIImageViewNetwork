@@ -1,0 +1,6 @@
+framework module Pods_UIImageViewNetwork_Tests {
+  umbrella header "Pods-UIImageViewNetwork_Tests-umbrella.h"
+
+  export *
+  module * { export * }
+}

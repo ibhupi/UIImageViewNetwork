@@ -1,0 +1,6 @@
+framework module Pods_UIImageViewNetwork_Example {
+  umbrella header "Pods-UIImageViewNetwork_Example-umbrella.h"
+
+  export *
+  module * { export * }
+}
