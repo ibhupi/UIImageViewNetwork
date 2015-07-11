@@ -1,0 +1,10 @@
+source 'https://github.com/CocoaPods/Specs.git'
+use_frameworks!
+
+target 'UIImageViewNetwork_Example', :exclusive => true do
+  pod "UIImageViewNetwork", :path => "../"
+end
+
+target 'UIImageViewNetwork_Tests', :exclusive => true do
+  pod "UIImageViewNetwork", :path => "../"
+end

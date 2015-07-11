@@ -1,0 +1,14 @@
+PODS:
+  - UIImageViewNetwork (0.1.0)
+
+DEPENDENCIES:
+  - UIImageViewNetwork (from `../`)
+
+EXTERNAL SOURCES:
+  UIImageViewNetwork:
+    :path: ../
+
+SPEC CHECKSUMS:
+  UIImageViewNetwork: fb90cb8e20649031c3020348c5a9e685e454abd8
+
+COCOAPODS: 0.37.2
