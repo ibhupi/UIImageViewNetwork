@@ -5,6 +5,15 @@
 [![License](https://img.shields.io/cocoapods/l/UIImageViewNetwork.svg?style=flat)](http://cocoapods.org/pods/UIImageViewNetwork)
 [![Platform](https://img.shields.io/cocoapods/p/UIImageViewNetwork.svg?style=flat)](http://cocoapods.org/pods/UIImageViewNetwork)
 
+## Summary
+
+UIImageViewNetwork is easy to use Swift UIImageView extension to download image from network asynchronously in background thred. 
+
+UIImageViewNetwork also safe to use in CollectionViews and TableViews because it ignores downloading image if new url is used for image. In reuseable collection view and table view cells it first checks wheather downloaded image url is same as recent URL or not. Ignore if downloaded image url is different than recent URL.
+
+UIImageViewNetwork also caches downloaded image to reuse. Default cache limit is 100 images. But can be easily customizable. 
+TODO: Further improvement in image caching and purging for memory warnings.
+
 ## Usage
 
 To run the example project, clone the repo, and run `pod install` from the Example directory first.
