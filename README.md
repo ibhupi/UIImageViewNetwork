@@ -25,7 +25,6 @@ UIImageView().setImageFromUrl("https://developer.apple.com/assets/elements/icons
 
 ```
 
-
 ## Requirements
 
 ## Installation
