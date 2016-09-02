@@ -46,7 +46,7 @@ extension UIImageView {
     - parameter imageUrlString: image url string to download image
     
     */
-    public func setImageFromUrl(imageUrlString : NSString) {
+    public func setImageFromUrl(_ imageUrlString : NSString) {
         self.setImageFromUrl(imageUrlString, animated: true)
     }
     
@@ -61,8 +61,8 @@ extension UIImageView {
     - parameter animated: boolean value(true) to show image with animation
     
     */
-    public func setImageFromUrl(imageUrlString : NSString, animated : Bool) {
-        if (self.imageUrlString != nil && self.imageUrlString.length > 0 && self.imageUrlString.isEqualToString(imageUrlString as String)) {
+    public func setImageFromUrl(_ imageUrlString : NSString, animated : Bool) {
+        if (self.imageUrlString != nil && self.imageUrlString.length > 0 && self.imageUrlString.isEqual(to: imageUrlString as String)) {
             return;
         }
         
@@ -77,7 +77,7 @@ extension UIImageView {
         }
         self.image = nil
         let imagesDict = ImageCache.cacheDictionary
-        if let imageCached = imagesDict?.objectForKey(imageUrlString) as? UIImage {
+        if let imageCached = imagesDict?.object(forKey: imageUrlString) as? UIImage {
             self.setImage(imageCached, animated: false)
             return
         }
@@ -85,11 +85,11 @@ extension UIImageView {
         downloadImage(imageUrlString) { (urlString, image) -> Void in
             // Cache Image for downloaded URL
             ImageCache.cacheDictionary?.setValue(image, forKey: urlString as String)
-            ImageCache.cacheArrayForPurging?.addObject(urlString)
-            if(ImageCache.cacheDictionary?.count > kCachedImageLimitCount) {
+            ImageCache.cacheArrayForPurging?.add(urlString)
+            if((ImageCache.cacheDictionary?.count)! > kCachedImageLimitCount) {
                 let firstImageInCache : NSString = (ImageCache.cacheArrayForPurging?.firstObject) as! NSString
-                ImageCache.cacheDictionary?.removeObjectForKey(firstImageInCache)
-                ImageCache.cacheArrayForPurging?.removeObject(firstImageInCache)
+                ImageCache.cacheDictionary?.removeObject(forKey: firstImageInCache)
+                ImageCache.cacheArrayForPurging?.remove(firstImageInCache)
             }
             if (urlString != self.imageUrlString) {
                 return;
@@ -109,9 +109,9 @@ extension UIImageView {
     - parameter animated: boolean value(true) to show image with animation
     
     */
-    public func setImage(image : UIImage?, animated : Bool) {
+    public func setImage(_ image : UIImage?, animated : Bool) {
         if (animated == true) {
-            UIView.transitionWithView(self, duration: 0.2, options: UIViewAnimationOptions.TransitionCrossDissolve, animations: { () -> Void in
+            UIView.transition(with: self, duration: 0.2, options: UIViewAnimationOptions.transitionCrossDissolve, animations: { () -> Void in
                 self.image = image
                 }, completion: { (stop) -> Void in
             })
@@ -129,21 +129,18 @@ extension UIImageView {
     - parameter completion: Completion block will be called in main
     thread after image is dowloaded or found in cache
     
-    */
-    func downloadImage(urlString : NSString, completion:(urlString : NSString, image : UIImage?) -> Void) {
-        dispatch_async(dispatch_get_global_queue(QOS_CLASS_BACKGROUND, 0)) { () -> Void in
+     */
+    func downloadImage(_ urlString : NSString, completion:@escaping (_ urlString : NSString, _ image : UIImage?) -> Void) {
+        DispatchQueue.global(qos: DispatchQoS.QoSClass.background).async { () -> Void in
             
-            let url = NSURL(string: urlString as String)
-            if (url == nil) {
-                self.imageDownloaded(urlString, image: nil, completion: completion)
-                return
-            }
-            let data = NSData(contentsOfURL: url!)
-            if (data?.length > 0), let image = UIImage(data: data!) {
-                self.imageDownloaded(urlString, image: image, completion: completion)
-            }
-            else {
-                self.imageDownloaded(urlString, image: nil, completion: completion)
+            self.imageDownloaded(urlString, image: nil, completion: completion)
+            
+            if let url = URL(string: urlString as String) {
+                if let data = try? Data(contentsOf: url) {
+                    if (data.count > 0), let image = UIImage(data: data) {
+                        self.imageDownloaded(urlString, image: image, completion: completion)
+                    }
+                }
             }
         }
     }
@@ -152,9 +149,9 @@ extension UIImageView {
     Helper function to call completion block in main thread
     (Reduing just few lines of code in downloadImage())
     */
-    func imageDownloaded(urlString : NSString, image : UIImage?, completion:(urlString : NSString, image : UIImage?) -> Void) {
-        dispatch_async(dispatch_get_main_queue()) { () -> Void in
-            completion(urlString: urlString, image: image)
+    func imageDownloaded(_ urlString : NSString, image : UIImage?, completion:@escaping (_ urlString : NSString, _ image : UIImage?) -> Void) {
+        DispatchQueue.main.async { () -> Void in
+            completion(urlString, image)
         }
     }
     
